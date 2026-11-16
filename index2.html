@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Funghi Explorer </title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header>
+        <h1> Funghi Explorer</h1> 
+        <p>Learn about the mysteries of funghi !</p>
+        <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href='#catalogue'>Funghi catalogue</a></li>
+                    <li><a href='#method'>Funghi observation</a></li>
+                </ul>
+            
+            
+        </nav>
+   </header>
+   <main>
+    <section id ='about'>
+        <h2>What are mushrooms and what are their powers?</h2>
+        <p>Mushrooms are part of an unique realm, inbetween animals and plants.</p>
+    </section>
+    <section id ='catalogue'>
+        <h2>Funghi catalogue</h2>
+        <p>Explore some of the most common funghi</p>
+        <form action="catalogue" method="get" aria-describedby="filter-note">
+            
+            <div>
+                <legend>Filter the catalogue</legend>
+                <label for="dangerosity">Dangerosity</label>
+                <select id="dangerosity" name="dangerosity">
+                    <option value="">All dangerosities</option>
+                    <option value="High">High</option>
+                    <option value="Low">Low</option>
+                </select>
+                <label for="max-size"> Maximum size of hat (Diameter in cm)</label>
+                <input type="number" id="max-size" name="max-size" min="0.1" step="0.1" placeholder="e.g. 2">
+                <div class="form-action">
+                    <button type="submit" disabled> Filter mushrooms </button>
+                    <button type="reset"> Reset filters </button>
+                </div>
+            </div>
+        </form>
+        <div>
+         <table>
+             <caption> A small selection of notorious mushrooms </caption>
+              <thead>
+                 <tr>
+                        <th scope="col">Species</th>
+                        <th scope="col">Dangerosity</th>
+                        <th scope="col">Rareness</th>
+                    </tr>
+                </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Cepes</th>
+                    <td>Mid</td>
+                    <td>Pretty rare</td>
+                </tr>
+                <tr>
+                    <th scope="row">Parisian mushroom</th>
+                    <td>Zero</td>
+                    <td>Very common</td>
+                </tr>
+                <tr>
+                    <th scope="row">Anamita killer</th>
+                    <td>Very high</td>
+                    <td>Pretty rare</td>
+                </tr>
+            </tbody>
+        </div>
+        </table>
+    </section>
+    <section id ='methods'>
+        <h2>How do we find mushrooms ?</h2>
+        <h3>Appearance</h3>
+        <p>Some mushrooms are easily identifiable with just a quick look</p>
+        <h3>Chemical tests</h3>
+        <p>Some futher testing is needed to identify specific species</p>
+    </section>
+    <footer>
+        <p>Data source: <a href="https://fungiatlas.com/all-mushrooms/">Mushrooms Collaborative Almanach</p>
+        <p><a href = '#about'>Back to the introduction</a></p>
+    </footer>
+   </main>
+</body>
+
+</html>
