@@ -21,6 +21,7 @@ head{
     min-height: 150px;
     gap: 20px;
     background-color:#dfebe0
+    
 }
 
 .header-image-left img,
@@ -75,7 +76,8 @@ footer{
 }
 
 .footer-image {
-    flex: 0 0 150px;
+    display :flex ;
+    justify-content: center;
 }
 
 .footer-image img {
@@ -96,19 +98,15 @@ footer{
     flex-wrap: nowrap;
 }
 
-main, footer {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0;
-    padding: 1.5rem;
-    box-sizing: border-box;
-}
+main, footer { width: 100%; max-width: 900px; margin: 0 auto; padding: 1.5rem; box-sizing: border-box; margin-top : 2rem; margin-right : 2rem ; margin-left : 2rem;}
 
 section{
     margin-bottom : 1.5rem ;
     padding:2rem;
     border:1px solid #d7e0ea;
     border-radius: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
     background-color: #ffff;
 }
 
