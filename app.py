@@ -2,12 +2,14 @@ from flask import Flask, render_template, request
 from collections import defaultdict
 import os
 import pandas as pd
+from pathlib import Path
 
 
 
 app = Flask(__name__)
 
-data = pd.read_csv("C:/Users/rivka/OneDrive/Bureau/.venv/Github/data/mushrooms.csv")
+csv_path = Path(__file__).resolve().parent / "data" / "mushrooms.csv"
+data = pd.read_csv(csv_path)
 
 
 FIELDNAMES = [
