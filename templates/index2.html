@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Mushroom Walk </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class ="main-header">
+        
+        <div class="header-image-left">
+            <img src = "https://cdn.pixabay.com/photo/2023/10/21/16/40/mushroom-8331778_1280.jpg" alt = "photo" width = "60">
+        </div>
+        <div class="header-title">
+            <h1>Mushroom Walk</h1>
+            <p>Where can you easily find interesting and delicious mushrooms?</p>
+        </div>
+        <div class="header-image-right">
+            <img src = "https://th.bing.com/th/id/OIP.Zo2GVEzyINlOF_WIuaaGWwHaE6?w=270&h=180&c=7&r=0&o=7&dpr=2.5&pid=1.7&rm=3" alt = 2e image>
+        </div>
+        
+        
+   </header>
+
+   <main>
+
+    <section id="about">
+<h2>Design your own mushroom and find it! </h2>
+<p> As 🍂fall🍂 progresses, 🍄mushrooms🍄 begin to sprout from the ground, and people head out of their homes to go mushroom hunting🥾🍃. </p>
+<p>For some, it’s a simple family activity; for others, a passion for nature.
+But caution, distinguishing edible species from poisonous ones requires meticulous attention to detail; there is no single characteristic by which all toxic mushrooms can be identified, nor one by which all edible mushrooms can be identified.</p>
+<p>Whether you're looking for them in grasslands, leaves, meadows, along paths, in urban areas, in woods, or even in waste areas, this catalog will help you estimate the likelihood of finding the rare mushroom you have in mind. </p>
+    </section>
+
+<!-- Section Catalogue & Filtres -->
+<section id="mushroom_catalogue">
+<h2>Mushroom catalogue</h2>
+<p>The data set includes descriptions of hypothetical samples
+corresponding to 23 species of gilled mushrooms in the Agaricus and
+Lepiota Family. Each species is identified as
+definitely edible, definitely poisonous, or of unknown edibility and
+not recommended. This latter class was combined with the poisonous
+one.
+The data were taken from The Audubon Society Field Guide to North
+American Mushrooms </p>
+    
+    
+        <footer>
+            <div class="footer-image">
+                <img src="https://scontent-cdg6-1.xx.fbcdn.net/v/t39.99422-6/735222762_1670275840864182_2775558823086145016_n.png?stp=dst-jpg_tt6&cstp=mx1122x1402&ctp=s1122x1402&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=2OXk_M7rbVEQ7kNvwFLlel7&_nc_oc=AdqjADR6yDFjhtTvh0kgU6YbVYfjrH9EPhEZdptIdrMxJ1ZyX-lgseuRhZmbDFB9QKoKoqgu0oysGPndFXH0TG0T&_nc_zt=14&_nc_ht=scontent-cdg6-1.xx&_nc_gid=E2pmieBItmTnK3OB8YKDIg&_nc_ss=7b289&oh=00_AQTG1fRfwoRGL9BCNPGTVHLAQO07844_fLrzhE4NBOQoWQ&oe=6B037B69" alt="Photo de champignon" width="600">
+            </div>
+            <div class="footer-nav">
+
+          
+                    <a href='#catalogue'>Mushroom catalogue</a>
+                    <a href='#habitat_comparison'>Habitat Comparison</a>
+                    <a href='#method'>Methods</a>
+            
+            </div>
+            
+
+        </footer>
+
+</section>
+    
+<section id="catalogue">
+
+    <h2>Catalogue</h2>
+
+    <p>
+        Learn to recognize gilled mushrooms in the Agaricus and
+        Lepiota Family: what are their characteristics? 
+    </p>
+
+    <form id="filter-form"
+          action="{{ url_for('index') }}#catalogue"
+          method="get">
+
+        <!-- 1. Group -->
+        <div>
+            <label for="group">Group</label>
+
+            <select id="group" name="group"
+                    onchange="this.form.submit()">
+
+                <option value="">Choose a group</option>
+
+                {% for group in groups.keys() %}
+                    <option value="{{ group }}"
+                        {% if selected_group == group %}selected{% endif %}>
+                        {{ group }}
+                    </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+    
+        <div>
+            <label for="characteristic">Characteristic</label>
+
+            <select id="characteristic" name="characteristic"
+                    onchange="this.form.submit()"
+                    {% if not characteristics %}disabled{% endif %}>
+
+                <option value="">Choose a characteristic</option>
+
+                {% for characteristic in characteristics %}
+                    <option value="{{ characteristic }}"
+                        {% if selected_characteristic == characteristic %}selected{% endif %}>
+                        {{ characteristic }}
+                    </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <!-- 3. Value -->
+        <div>
+            <label for="value">Value</label>
+
+            <select id="value" name="value"
+                    {% if not values %}disabled{% endif %}>
+
+                <option value="">Choose a value</option>
+
+                {% for item in values %}
+                    <option value="{{ item }}"
+                        {% if selected_value == item|string %}selected{% endif %}>
+                        {{ item }}
+                    </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="form-actions">
+
+            <button type="submit">Filter mushrooms</button>
+
+            <a class="reset-link"
+               href="{{ url_for('index') }}#catalogue">
+                Clear filters
+            </a>
+
+        </div>
+
+    </form>
+
+    <p id="status" role="status">
+        {% if error %}
+            {{ error }}
+        {% else %}
+            Showing {{ mushrooms|length }} of {{ total }} mushrooms.
+        {% endif %}
+    </p>
+    <div class="table-container">
+        <table>
+            <caption>A selection of mushrooms based on your filters</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Class</th>
+                        <th scope="col">Cap Shape</th>
+                        <th scope="col">Cap Surface</th>
+                        <th scope="col">Cap Color</th>
+                        <th scope="col">Bruises</th>
+                        <th scope="col">Odor</th>
+                        <th scope="col">Gill Attachment</th>
+                        <th scope="col">Gill Spacing</th>
+                        <th scope="col">Gill Size</th>
+                        <th scope="col">Gill Color</th>
+                        <th scope="col">Stalk Shape</th>
+                        <th scope="col">Stalk Root</th>
+                        <th scope="col">Stalk Surface above Ring</th>
+                        <th scope="col">Stalk Surface below Ring</th>
+                        <th scope="col">Stalk Color above Ring</th>
+                        <th scope="col">Stalk Color below Ring</th>
+                        <th scope="col">Veil Type</th>
+                        <th scope="col">Veil Color</th>
+                        <th scope="col">Ring Number</th>
+                        <th scope="col">Ring Type</th>
+                        <th scope="col">Spore Print Color</th>
+                        <th scope="col">Population</th>
+                        <th scope="col">Habitat</th>
+                    </tr>
+                </thead>
+            
+                <tbody>
+
+                    {% for mushroom in mushrooms[:6] %}
+                        <tr>
+                            <td scope="row">{{ mushroom.get('class', '') }}</td>
+                            <td>{{ mushroom.get('cap-shape', '') }}</td>
+                            <td>{{ mushroom.get('cap-surface', '') }}</td>
+                            <td>{{ mushroom.get('cap-color', '') }}</td>
+                            <td>{{ mushroom.get('bruises', '') }}</td>
+                            <td>{{ mushroom.get('odor', '') }}</td>
+                            <td>{{ mushroom.get('gill-attachment', '') }}</td>
+                            <td>{{ mushroom.get('gill-spacing', '') }}</td>
+                            <td>{{ mushroom.get('gill-size', '') }}</td>
+                            <td>{{ mushroom.get('gill-color', '') }}</td>
+                            <td>{{ mushroom.get('stalk-shape', '') }}</td>
+                            <td>{{ mushroom.get('stalk-root', '') }}</td>
+                            <td>{{ mushroom.get('stalk-surface-above-ring', '') }}</td>
+                            <td>{{ mushroom.get('stalk-surface-below-ring', '') }}</td>
+                            <td>{{ mushroom.get('stalk-color-above-ring', '') }}</td>
+                            <td>{{ mushroom.get('stalk-color-below-ring', '') }}</td>
+                            <td>{{ mushroom.get('veil-type', '') }}</td>
+                            <td>{{ mushroom.get('veil-color', '') }}</td>
+                            <td>{{ mushroom.get('ring-number', '') }}</td>
+                            <td>{{ mushroom.get('ring-type', '') }}</td>
+                            <td>{{ mushroom.get('spore-print-color', '') }}</td>
+                            <td>{{ mushroom.get('population', '') }}</td>
+                            <td>{{ mushroom.get('habitat', '') }}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        {% if mushrooms|length > 6 %}
+        <details>
+            <summary>Show all mushrooms filtered</summary>
+
+            <table>
+                <tbody>
+                    {% for mushroom in mushrooms[6:] %}
+                    <tr>
+                            <td scope="row">{{ mushroom.get('class', '') }}</td>
+                            <td>{{ mushroom.get('cap-shape', '') }}</td>
+                            <td>{{ mushroom.get('cap-surface', '') }}</td>
+                            <td>{{ mushroom.get('cap-color', '') }}</td>
+                            <td>{{ mushroom.get('bruises', '') }}</td>
+                            <td>{{ mushroom.get('odor', '') }}</td>
+                            <td>{{ mushroom.get('gill-attachment', '') }}</td>
+                            <td>{{ mushroom.get('gill-spacing', '') }}</td>
+                            <td>{{ mushroom.get('gill-size', '') }}</td>
+                            <td>{{ mushroom.get('gill-color', '') }}</td>
+                            <td>{{ mushroom.get('stalk-shape', '') }}</td>
+                            <td>{{ mushroom.get('stalk-root', '') }}</td>
+                            <td>{{ mushroom.get('stalk-surface-above-ring', '') }}</td>
+                            <td>{{ mushroom.get('stalk-surface-below-ring', '') }}</td>
+                            <td>{{ mushroom.get('stalk-color-above-ring', '') }}</td>
+                            <td>{{ mushroom.get('stalk-color-below-ring', '') }}</td>
+                            <td>{{ mushroom.get('veil-type', '') }}</td>
+                            <td>{{ mushroom.get('veil-color', '') }}</td>
+                            <td>{{ mushroom.get('ring-number', '') }}</td>
+                            <td>{{ mushroom.get('ring-type', '') }}</td>
+                            <td>{{ mushroom.get('spore-print-color', '') }}</td>
+                            <td>{{ mushroom.get('population', '') }}</td>
+                            <td>{{ mushroom.get('habitat', '') }}</td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+        </details>
+    {% endif %}
+</div>
+
+</section>
+
+<section id="habitat_comparison">
+<h2>Focus Analysis with Habitats</h2>
+<p>Choose a characteristic and a target habitat : which mushrooms will you find there ?</p>
+
+<form method="get" action="{{ url_for('index') }}#habitat_comparison">
+<div style="display: flex; gap: 20px; margin-bottom: 15px;">
+<div>
+<label for="target_var">Target Variable :</label>
+<select name="target_var" id="target_var">
+{% for var in available_vars %}
+<option value="{{ var }}" {% if target_var == var %}selected{% endif %}>{{ var }}</option>
+{% endfor %}
+</select>
+</div>
+
+<div>
+<label for="target_habitat">Target Habitat :</label>
+<select name="target_habitat" id="target_habitat">
+<option value="">-- All habitats --</option>
+{% for h in habitats %}
+<option value="{{ h }}" {% if target_habitat == h %}selected{% endif %}>{{ h }}</option>
+{% endfor %}
+</select>
+</div>
+</div>
+
+<div class="form-actions">
+<button type="submit">Display Analysis</button>
+</div>
+</form>
+
+<div>
+<table>
+<caption>
+Distribution of <strong>{{ target_var }}</strong>
+{% if target_habitat %} for habitat <strong>{{ target_habitat }}</strong>{% else %} (All habitats){% endif %}
+</caption>
+<thead>
+<tr>
+<th scope="col">Characteristic ({{ target_var }})</th>
+<th scope="col">Number of Mushrooms</th>
+</tr>
+</thead>
+<tbody>
+{% for val, count in var_counts.items() %}
+<tr>
+<th scope="row">{{ val }}</th>
+<td>{{ count }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<!-- Graphique interactif -->
+<div style="width: 100%; max-width: 700px; margin: 30px auto;">
+<canvas id="mushroomChart"></canvas>
+</div>
+
+<!-- Script JavaScript pour générer le graphique -->
+<script>
+// Récupération des données envoyées par Flask au format JSON
+const rawData = {{ var_counts  | tojson }};
+
+const labels = Object.keys(rawData);
+const dataValues = Object.values(rawData);
+
+const ctx = document.getElementById('mushroomChart').getContext('2d');
+new Chart(ctx, {
+type: 'bar', // Type de graphique : 'bar' pour des barres, 'pie' pour un camembert, etc.
+data: {
+labels: labels,
+datasets: [{
+label: 'Number of Mushrooms',
+data: dataValues,
+backgroundColor: 'rgba(54, 162, 235, 0.6)',
+borderColor: 'rgba(54, 162, 235, 1)',
+borderWidth: 1
+}]
+},
+options: {
+responsive: true,
+plugins: {
+legend: {
+display: true,
+position: 'top',
+}
+},
+scales: {
+y: {
+beginAtZero: true
+}
+}
+}
+});
+</script>
+</section>
+
+
+    <section id ='method'>
+        <p> If you're in doubt, you can always reach out to professionals (pharmacists...). Enjoy your walk ! </p>
+        <p>Send us your best mushrooms pictures at champichampi@gmail.com </p>
+    </section>
+    <footer>
+        <p>Data source: <a href="https://archive.ics.uci.edu/dataset/73/mushroom">Mushrooms Dataset</p>
+        <p><a href = '#about'>Back to the introduction</a></p>
+        <img src="https://cdn.pixabay.com/photo/2024/02/14/16/29/mushrooms-8573828_1280.jpg" alt="Photo de champignon" width="600">
+    </footer>
+   </main>
+</body>
+
+</html>
